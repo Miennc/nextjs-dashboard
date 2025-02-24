@@ -105,7 +105,7 @@ export default function PokemonPage() {
                                         <TableCell className="text-gray6">{pageIndex * 50 + index + 1}</TableCell>
                                         <TableCell className="text-left text-gray6 capitalize">{pokemon.name}</TableCell>
                                         <TableCell className="text-left">
-                                            <Image src={pokemon?.sprites?.front_default} alt={pokemon.name} width={100} height={100} priority/>
+                                            <Image src={pokemon?.sprites?.front_default ?? 'https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png' } alt={pokemon.name} width={100} height={100} priority/>
                                         </TableCell>
                                         <TableCell className="text-left">
                                             {pokemon?.types?.map((type) => (
