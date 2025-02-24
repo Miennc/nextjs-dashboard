@@ -5,6 +5,10 @@ import { useEffect, useRef } from "react";
 import { PokemonServices } from '@/app/services/pokemonServices';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { PokemonSchema } from "@/app/dashboard/pokemon/schema/pokemon";
+type PokemonDetailType = {
+    name: string;
+    url: string;
+};
 const getDataPokemon = async ({ pageParam = 0 }) => {
     try {
         const res = await PokemonServices.getAllDataPokemon({
@@ -13,9 +17,10 @@ const getDataPokemon = async ({ pageParam = 0 }) => {
         });
 
         const dataPokemon = res.results;
-        const idPokemon = dataPokemon.map((pokemon: any) => pokemon.url.split('/').filter(Boolean).pop());
-        const detailPokemon = await Promise.all(idPokemon.map(async (id: any) => await getDetail(id)));
-        const allDataPokemon = dataPokemon.map((pokemon: any, index: number) => ({
+        const idPokemon = dataPokemon.map((pokemon: PokemonDetailType) => pokemon.url.split('/').filter(Boolean).pop());
+        const detailPokemon = await Promise.all(idPokemon.map(async (id: string[]) => await getDetail(id)));
+        console.log('dataPokemon', detailPokemon);
+        const allDataPokemon = dataPokemon.map((pokemon, index: number) => ({
             ...pokemon,
             ...detailPokemon[index],
         }));
@@ -88,7 +93,7 @@ export default function PokemonPage() {
                         </TableHeader>
                         <TableBody>
                             {data.pages.map((page, pageIndex) =>
-                                page.data.map((pokemon: any, index: number) => (
+                                page.data.map((pokemon, index: number) => (
                                     <TableRow className="h-[38px] hover:bg-gray-50" key={`${pageIndex}-${index}`}>
                                         <TableCell className="text-gray6">{pageIndex * 50 + index + 1}</TableCell>
                                         <TableCell className="text-left text-gray6 capitalize">{pokemon.name}</TableCell>
@@ -96,7 +101,7 @@ export default function PokemonPage() {
                                             <Image src={pokemon?.sprites?.front_default} alt={pokemon.name} width={100} height={100} priority/>
                                         </TableCell>
                                         <TableCell className="text-left">
-                                            {pokemon?.types?.map((type: any) => (
+                                            {pokemon?.types?.map((type) => (
                                                 <span key={type?.slot} className="text-gray6 capitalize">
                                                     {type.type?.name} {pokemon?.types?.length > 1 ? ' ' : ''}
                                                 </span>

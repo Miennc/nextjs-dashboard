@@ -1,8 +1,12 @@
 import { KyClient } from './KyClient';
-
-const getAllDataPokemon = (payload: any) => {
-    return KyClient.get('pokemon/', payload);
+interface PokemonQueryParams {
+    limit: number;
+    offset: number;
 }
+const getAllDataPokemon = (payload: PokemonQueryParams) => {
+    return KyClient.get('pokemon/', { searchParams: payload });
+};
+
 
 const getDetailDataPokemon = (id: string) => {
     return KyClient.get(`pokemon/${id}`);

@@ -57,7 +57,6 @@ function getInstance(): KyInstance {
 }
 
 async function get<T>(endpointApiUrl: string, payload: Record<string, unknown> = {}, config: Options = {}): Promise<T> {
-    // @ts-ignore
     return getInstance().get(endpointApiUrl, { searchParams: payload, ...config }).json<T>();
 }
 
