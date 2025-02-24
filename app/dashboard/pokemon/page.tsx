@@ -25,7 +25,7 @@ const getDataPokemon = async ({ pageParam = 0 }) => {
         }) as Pokemon;
         const dataPokemon = res.results as PokemonDetailType[];
         const idPokemon = dataPokemon.map((pokemon: PokemonDetailType) => pokemon.url.split('/').filter(Boolean).pop());
-        const detailPokemon = await Promise.all(idPokemon.map(async (id) => await getDetail(id)));
+        const detailPokemon = await Promise.all(idPokemon.map(async (id) => await getDetail(Number(id))));
         console.log('dataPokemon', detailPokemon);
         const allDataPokemon = dataPokemon.map((pokemon, index: number) => ({
             ...pokemon,
@@ -40,7 +40,7 @@ const getDataPokemon = async ({ pageParam = 0 }) => {
 
 const getDetail = async (id: number) => {
     try {
-        const res = await PokemonServices.getDetailDataPokemon(id.toString());
+        const res = await PokemonServices.getDetailDataPokemon(Number(id));
         // return res;
         return  PokemonSchema.parse(res);
     } catch (err) {

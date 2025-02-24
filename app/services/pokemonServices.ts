@@ -8,7 +8,7 @@ const getAllDataPokemon = (payload: PokemonQueryParams) => {
 };
 
 
-const getDetailDataPokemon = (id: string) => {
+const getDetailDataPokemon = (id: number) => {
     return KyClient.get(`pokemon/${id}`);
 }
 export const PokemonServices = {
