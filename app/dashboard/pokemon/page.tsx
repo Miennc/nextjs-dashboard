@@ -9,14 +9,21 @@ type PokemonDetailType = {
     name: string;
     url: string;
 };
+
+type Pokemon = {
+    count: number;
+    next: string;
+    previous: string;
+    results: PokemonDetailType[];
+}
+
 const getDataPokemon = async ({ pageParam = 0 }) => {
     try {
         const res = await PokemonServices.getAllDataPokemon({
             limit: 50,
             offset: pageParam
-        });
-
-        const dataPokemon = res.results;
+        }) as Pokemon;
+        const dataPokemon = res.results
         const idPokemon = dataPokemon.map((pokemon: PokemonDetailType) => pokemon.url.split('/').filter(Boolean).pop());
         const detailPokemon = await Promise.all(idPokemon.map(async (id: string[]) => await getDetail(id)));
         console.log('dataPokemon', detailPokemon);
