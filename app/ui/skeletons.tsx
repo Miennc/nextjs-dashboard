@@ -217,54 +217,61 @@ export function InvoicesTableSkeleton() {
   );
 }
 import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
 } from '@/components/ui/table';
 export function PokemonTableSkeleton() {
-    return (
-        <Table>
-            {/* Table Header */}
-            <TableHeader className="h-[40px] bg-gray-100">
-                <TableRow>
-                    <TableHead className="w-[80px] text-gray4 text-left">ID</TableHead>
-                    <TableHead className="w-[457px] text-gray4 text-left">Name</TableHead>
-                    <TableHead className="w-[457px] text-gray4 text-left">Image</TableHead>
-                    <TableHead className="w-[457px] text-gray4 text-left">Type Name</TableHead>
-                </TableRow>
-            </TableHeader>
+  return (
+    <Table>
+      {/* Table Header */}
+      <TableHeader className="h-[40px] bg-gray-100">
+        <TableRow>
+          <TableHead className="w-[80px] text-gray4 text-left">ID</TableHead>
+          <TableHead className="w-[457px] text-gray4 text-left">Name</TableHead>
+          <TableHead className="w-[457px] text-gray4 text-left">
+            Image
+          </TableHead>
+          <TableHead className="w-[457px] text-gray4 text-left">
+            Type Name
+          </TableHead>
+        </TableRow>
+      </TableHeader>
 
-            {/* Table Body */}
-            <TableBody>
-                {Array(5).fill(0).map((_, index) => (
-                    <TableRow className="h-[38px] animate-pulse hover:bg-gray-50" key={index}>
-                        {/* ID */}
-                        <TableCell className="text-gray6">
-                            <div className="h-4 w-8 bg-gray-300 rounded"></div>
-                        </TableCell>
+      {/* Table Body */}
+      <TableBody>
+        {Array(5)
+          .fill(0)
+          .map((_, index) => (
+            <TableRow
+              className="h-[38px] animate-pulse hover:bg-gray-50"
+              key={index}
+            >
+              {/* ID */}
+              <TableCell className="text-gray6">
+                <div className="h-4 w-8 bg-gray-300 rounded"></div>
+              </TableCell>
 
-                        {/* Name */}
-                        <TableCell className="text-left text-gray6">
-                            <div className="h-4 w-24 bg-gray-300 rounded"></div>
-                        </TableCell>
+              {/* Name */}
+              <TableCell className="text-left text-gray6">
+                <div className="h-4 w-24 bg-gray-300 rounded"></div>
+              </TableCell>
 
-                        {/* Image */}
-                        <TableCell className="text-left">
-                            <div className="h-10 w-10 bg-gray-300 rounded-full"></div>
-                        </TableCell>
+              {/* Image */}
+              <TableCell className="text-left">
+                <div className="h-10 w-10 bg-gray-300 rounded-full"></div>
+              </TableCell>
 
-                        {/* Type Name */}
-                        <TableCell className="text-left">
-                            <div className="h-4 w-16 bg-gray-300 rounded"></div>
-                        </TableCell>
-                    </TableRow>
-                ))}
-            </TableBody>
-        </Table>
-    );
+              {/* Type Name */}
+              <TableCell className="text-left">
+                <div className="h-4 w-16 bg-gray-300 rounded"></div>
+              </TableCell>
+            </TableRow>
+          ))}
+      </TableBody>
+    </Table>
+  );
 }
-
-

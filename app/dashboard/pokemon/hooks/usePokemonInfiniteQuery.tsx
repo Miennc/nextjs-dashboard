@@ -1,4 +1,7 @@
-import {useInfiniteQuery, useSuspenseInfiniteQuery} from '@tanstack/react-query';
+import {
+  useInfiniteQuery,
+  useSuspenseInfiniteQuery,
+} from '@tanstack/react-query';
 import { PokemonServices } from '@/app/services/pokemonServices';
 import { PokemonSchema } from '@/app/dashboard/pokemon/schema/pokemon';
 import {

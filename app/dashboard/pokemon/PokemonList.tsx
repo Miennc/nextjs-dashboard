@@ -3,9 +3,15 @@ import { useEffect, useRef } from 'react';
 import { usePokemonInfiniteQuery } from '@/app/dashboard/pokemon/hooks/usePokemonInfiniteQuery';
 import { PokemonTable } from '@/app/dashboard/pokemon/_components/PokemonTable';
 
-export  function PokemonList() {
-  const { data,isLoading, isError, fetchNextPage, hasNextPage, isFetchingNextPage } =
-    usePokemonInfiniteQuery();
+export function PokemonList() {
+  const {
+    data,
+    isLoading,
+    isError,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = usePokemonInfiniteQuery();
 
   const observerRef = useRef<HTMLDivElement | null>(null);
 
