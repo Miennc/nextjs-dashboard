@@ -1,4 +1,4 @@
-import { useInfiniteQuery } from '@tanstack/react-query';
+import {useInfiniteQuery, useSuspenseInfiniteQuery} from '@tanstack/react-query';
 import { PokemonServices } from '@/app/services/pokemonServices';
 import { PokemonSchema } from '@/app/dashboard/pokemon/schema/pokemon';
 import {
@@ -50,7 +50,7 @@ const fetchPokemonData = async ({
 };
 
 export const usePokemonInfiniteQuery = () => {
-  return useInfiniteQuery({
+  return useSuspenseInfiniteQuery({
     queryKey: ['pokemon'],
     queryFn: fetchPokemonData,
     initialPageParam: 0,
