@@ -4,6 +4,6 @@ module.exports = {
     autoprefixer: {},
   },
   images: {
-    domains: ["raw.githubusercontent.com"],
+    domains: ['raw.githubusercontent.com'],
   },
 };
