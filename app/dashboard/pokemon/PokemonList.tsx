@@ -1,11 +1,12 @@
 'use client';
 import { useEffect, useRef } from 'react';
-import { usePokemonInfiniteQuery } from '@/app/dashboard/pokemon/hooks/usePokemonInfiniteQuery';
+import { pokemonInfiniteQueryOptions } from '@/app/dashboard/pokemon/hooks/usePokemonInfiniteQuery';
 import { PokemonTable } from '@/app/dashboard/pokemon/_components/PokemonTable';
+import {useSuspenseInfiniteQuery} from "@tanstack/react-query";
 
 export function PokemonList() {
   const { data, isError, fetchNextPage, hasNextPage, isFetchingNextPage } =
-    usePokemonInfiniteQuery();
+      useSuspenseInfiniteQuery(pokemonInfiniteQueryOptions);
 
   const observerRef = useRef<HTMLDivElement | null>(null);
 
