@@ -4,14 +4,8 @@ import { usePokemonInfiniteQuery } from '@/app/dashboard/pokemon/hooks/usePokemo
 import { PokemonTable } from '@/app/dashboard/pokemon/_components/PokemonTable';
 
 export function PokemonList() {
-  const {
-    data,
-    isLoading,
-    isError,
-    fetchNextPage,
-    hasNextPage,
-    isFetchingNextPage,
-  } = usePokemonInfiniteQuery();
+  const { data, isError, fetchNextPage, hasNextPage, isFetchingNextPage } =
+    usePokemonInfiniteQuery();
 
   const observerRef = useRef<HTMLDivElement | null>(null);
 
@@ -38,10 +32,6 @@ export function PokemonList() {
         Failed to load Pokémon data
       </p>
     );
-
-  // if (isLoading) {
-  //   throw new Promise(() => {});
-  // }
   return (
     <div className="w-full bg-white rounded-lg border border-gray-200">
       {data && (

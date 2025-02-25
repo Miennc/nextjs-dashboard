@@ -1,13 +1,7 @@
-import {
-  useInfiniteQuery,
-  useSuspenseInfiniteQuery,
-} from '@tanstack/react-query';
+import { useSuspenseInfiniteQuery } from '@tanstack/react-query';
 import { PokemonServices } from '@/app/services/pokemonServices';
 import { PokemonSchema } from '@/app/dashboard/pokemon/schema/pokemon';
-import {
-  PokemonListResponse,
-  PaginatedResponse,
-} from '@/app/dashboard/pokemon/types/pokemon';
+import { PokemonListResponse } from '@/app/dashboard/pokemon/types/pokemon';
 
 const POKEMON_PER_PAGE = 50;
 const MAX_POKEMON = 500;
@@ -22,9 +16,7 @@ const getDetailPokemon = async (id: number) => {
   }
 };
 
-const fetchPokemonData = async ({
-  pageParam = 0,
-}): Promise<PaginatedResponse> => {
+const fetchPokemonData = async ({ pageParam = 0 }) => {
   try {
     const res = (await PokemonServices.getAllDataPokemon({
       limit: POKEMON_PER_PAGE,
@@ -57,7 +49,7 @@ export const usePokemonInfiniteQuery = () => {
     queryKey: ['pokemon'],
     queryFn: fetchPokemonData,
     initialPageParam: 0,
-    getNextPageParam: (lastPage: PaginatedResponse) =>
+    getNextPageParam: (lastPage) =>
       lastPage.nextOffset < MAX_POKEMON ? lastPage.nextOffset : undefined,
   });
 };
