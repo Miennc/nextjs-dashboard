@@ -50,6 +50,13 @@ const getDetail = async (id: number) => {
 };
 
 export default function PokemonPage() {
+
+    const pokemonQueryOptions = {
+        queryKey: ['pokemon'],
+        queryFn: getDataPokemon,
+        initialPageParam: 0,
+        getNextPageParam: (lastPage: any) => (lastPage.nextOffset < 500 ? lastPage.nextOffset : undefined),
+    };
     const {
         data,
         isLoading,
@@ -57,12 +64,9 @@ export default function PokemonPage() {
         fetchNextPage,
         hasNextPage,
         isFetchingNextPage
-    } = useInfiniteQuery({
-        queryKey: ['pokemon'],
-        queryFn: getDataPokemon,
-        initialPageParam: 0,
-        getNextPageParam: (lastPage) => lastPage.nextOffset < 500 ? lastPage.nextOffset : undefined,
-    });
+    } = useInfiniteQuery(pokemonQueryOptions);
+
+
     const observerRef = useRef<HTMLDivElement | null>(null);
     useEffect(() => {
         const observer = new IntersectionObserver(
