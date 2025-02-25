@@ -1,62 +1,9 @@
 'use client';
-import Image from "next/image";
-import { useInfiniteQuery } from '@tanstack/react-query';
 import { useEffect, useRef } from "react";
-import { PokemonServices } from '@/app/services/pokemonServices';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { PokemonSchema } from "@/app/dashboard/pokemon/schema/pokemon";
-type PokemonDetailType = {
-    name: string;
-    url: string;
-};
-
-type Pokemon = {
-    count: number;
-    next: string;
-    previous: string;
-    results: PokemonDetailType[];
-}
-
-const getDataPokemon = async ({ pageParam = 0 }) => {
-    try {
-        const res = await PokemonServices.getAllDataPokemon({
-            limit: 50,
-            offset: pageParam
-        }) as Pokemon;
-        const dataPokemon = res.results as PokemonDetailType[];
-        const idPokemon = dataPokemon.map((pokemon: PokemonDetailType) => pokemon.url.split('/').filter(Boolean).pop());
-        const detailPokemon = await Promise.all(idPokemon.map(async (id) => await getDetail(Number(id))));
-        console.log('dataPokemon', detailPokemon);
-        const allDataPokemon = dataPokemon.map((pokemon, index: number) => ({
-            ...pokemon,
-            ...detailPokemon[index],
-        }));
-        return { data: allDataPokemon, nextOffset: pageParam + 50 };
-    } catch (err) {
-        console.error('Error fetching Pokémon:', err);
-        throw err;
-    }
-};
-
-const getDetail = async (id: number) => {
-    try {
-        const res = await PokemonServices.getDetailDataPokemon(Number(id));
-        // return res;
-        return  PokemonSchema.parse(res);
-    } catch (err) {
-        console.error('Error fetching Pokémon:', err);
-        throw err;
-    }
-};
+import { usePokemonInfiniteQuery } from "@/app/dashboard/pokemon/hooks/usePokemonInfiniteQuery";
+import { PokemonTable } from "@/app/dashboard/pokemon/_components/PokemonTable";
 
 export default function PokemonPage() {
-
-    const pokemonQueryOptions = {
-        queryKey: ['pokemon'],
-        queryFn: getDataPokemon,
-        initialPageParam: 0,
-        getNextPageParam: (lastPage: any) => (lastPage.nextOffset < 500 ? lastPage.nextOffset : undefined),
-    };
     const {
         data,
         isLoading,
@@ -64,18 +11,18 @@ export default function PokemonPage() {
         fetchNextPage,
         hasNextPage,
         isFetchingNextPage
-    } = useInfiniteQuery(pokemonQueryOptions);
-
+    } = usePokemonInfiniteQuery();
 
     const observerRef = useRef<HTMLDivElement | null>(null);
+
     useEffect(() => {
         const observer = new IntersectionObserver(
-            (entries) => {
-                if (entries[0].isIntersecting && hasNextPage) {
+            (entries: IntersectionObserverEntry[]) => {
+                if (entries[0].isIntersecting && hasNextPage && !isFetchingNextPage) {
                     fetchNextPage();
                 }
             },
-            { threshold: 1.0 }
+            { threshold: 0.5 }
         );
 
         if (observerRef.current) {
@@ -83,50 +30,26 @@ export default function PokemonPage() {
         }
 
         return () => observer.disconnect();
-    }, [hasNextPage, fetchNextPage]);
+    }, [hasNextPage, fetchNextPage, isFetchingNextPage]);
+
+    if (isLoading) return <p className="container mx-auto p-6">Loading...</p>;
+    if (isError) return <p className="container mx-auto p-6 text-red-500">Failed to load Pokémon data</p>;
 
     return (
         <div className="container mx-auto p-6">
             <h1 className="text-2xl font-bold mb-4">Pokemon List</h1>
-            {isLoading && <p>Loading...</p>}
-            {isError && <p className="text-red-500">Failed to load Pokémon data</p>}
 
             {data && (
-                <div className="w-full bg-[#fff] rounded-[8px] border border-gray1">
-                    <Table>
-                        <TableHeader className="h-[40px] bg-gray-100">
-                            <TableRow>
-                                <TableHead className="w-[80px] text-gray4 text-left">ID</TableHead>
-                                <TableHead className="w-[457px] text-gray4 text-left">Name</TableHead>
-                                <TableHead className="w-[457px] text-gray4 text-left">Image</TableHead>
-                                <TableHead className="w-[457px] text-gray4 text-left">Type Name</TableHead>
-                            </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                            {data.pages.map((page, pageIndex) =>
-                                page.data.map((pokemon, index: number) => (
-                                    <TableRow className="h-[38px] hover:bg-gray-50" key={`${pageIndex}-${index}`}>
-                                        <TableCell className="text-gray6">{pageIndex * 50 + index + 1}</TableCell>
-                                        <TableCell className="text-left text-gray6 capitalize">{pokemon.name}</TableCell>
-                                        <TableCell className="text-left">
-                                            <Image src={pokemon?.sprites?.front_default ?? 'https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png' } alt={pokemon.name} width={100} height={100} priority/>
-                                        </TableCell>
-                                        <TableCell className="text-left">
-                                            {pokemon?.types?.map((type) => (
-                                                <span key={type?.slot} className="text-gray6 capitalize">
-                                                    {type.type?.name} {pokemon?.types?.length > 1 ? ' ' : ''}
-                                                </span>
-                                            ))}
-                                        </TableCell>
-                                    </TableRow>
-                                ))
-                            )}
-                        </TableBody>
-                    </Table>
+                <div className="w-full bg-white rounded-lg border border-gray-200">
+                    <PokemonTable data={data} />
 
-                    {/* **Vùng để Observer theo dõi (khi user scroll xuống cuối)** */}
-                    <div ref={observerRef} className="h-10 flex items-center justify-center">
-                        {isFetchingNextPage && <p>loading</p>}
+                    <div
+                        ref={observerRef}
+                        className="h-10 flex items-center justify-center"
+                    >
+                        {isFetchingNextPage && (
+                            <p className="text-gray-600">Loading more...</p>
+                        )}
                     </div>
                 </div>
             )}
